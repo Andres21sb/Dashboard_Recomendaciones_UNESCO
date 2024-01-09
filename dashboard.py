@@ -63,7 +63,13 @@ data_frame['WEB'] = data_frame['WEB'].apply(lambda x: f'<a href="{x}" target="_b
 
 data_frame['Nombre de la iniciativa'] = data_frame['Nombre de la iniciativa'].astype(str)
 
+#print the data_frame
+print('Testing before',data_frame['Nombre de la iniciativa'])
+
 data_frame['Nombre de la iniciativa'] = data_frame.apply(lambda row: f'<i class="fas fa-info-circle" title="{row["Función de la iniciativa"]}"></i> {row["Nombre de la iniciativa"]}', axis=1)
+
+#print the data_frame
+print('Testing after',data_frame['Nombre de la iniciativa'])
 
 app.layout = html.Div([
     
