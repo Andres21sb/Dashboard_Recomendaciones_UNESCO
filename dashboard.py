@@ -98,10 +98,19 @@ app.layout = html.Div([
         id='data-table',
         columnDefs=[
             {'headerName': 'PAIS' if col == 'CODIGO' else col, 'field': col,
-             'cellRenderer': 'markdown' if col in ['WEB', 'CONTACTO', 'Nombre de la iniciativa'] else None}
+             'filter':True,
+             'sortable':True if col =='PAIS' else False,
+             'cellRenderer':'markdown' if col in ['WEB','CONTACTO','Nombre de la iniciativa'] else None,}
             for col in excluded_columns
         ],
+        dangerously_allow_code=True,
         rowData=data_frame[excluded_columns].to_dict('records'),
+        className="ag-theme-balham",
+        columnSize="sizeToFit",
+        dashGridOptions={
+            'pagination': True,
+            'paginationAutoPageSize': True,
+        }
 
 
     )
