@@ -52,13 +52,13 @@ app = Dash(__name__, external_stylesheets=external_stylesheets)
 data_frame['CONTACTO'] = data_frame['CONTACTO'].astype(str)
 
 # Agregar ícono a la columna de contacto si es diferente de NO INFO
-data_frame['CONTACTO'] = data_frame['CONTACTO'].apply(lambda x: f'<i class="fas fa-envelope" title="{x}"></i>' if x != 'NO INFO' else x)
+#data_frame['CONTACTO'] = data_frame['CONTACTO'].apply(lambda x: f'<i class="fas fa-envelope" title="{x}"></i>' if x != 'NO INFO' else x)
 
 # Ajustar el tipo de dato de la columna 'WEB'
 data_frame['WEB'] = data_frame['WEB'].astype(str)
 
 # Hipervínculo a la columna web si es diferente de NO INFO
-data_frame['WEB'] = data_frame['WEB'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>' if x != 'NO INFO' else x)
+#data_frame['WEB'] = data_frame['WEB'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>' if x != 'NO INFO' else x)
 
 data_frame['Nombre de la iniciativa'] = data_frame['Nombre de la iniciativa'].astype(str)
 
@@ -68,10 +68,10 @@ data_frame['Nombre de la iniciativa_tooltip'] = data_frame.apply(
     axis=1
 )
 
-data_frame['Nombre de la iniciativa'] = data_frame.apply(
+""" data_frame['Nombre de la iniciativa'] = data_frame.apply(
     lambda row: f'<i class="fas fa-info-circle"></i> {row["Nombre de la iniciativa"]}',
     axis=1
-)
+) """
 
 app.layout = html.Div([
     html.H1(children='Dashboard recomendaciones UNESCO', style={'textAlign': 'center'}),
@@ -100,18 +100,25 @@ app.layout = html.Div([
             {'headerName': 'PAIS' if col == 'CODIGO' else col, 'field': col,
              'filter':True,
              'sortable':True if col =='PAIS' else False,
-             'cellRenderer':'markdown' if col in ['WEB','CONTACTO','Nombre de la iniciativa'] else None,}
+             'cellRenderer':"ContactoButton" if col == 'CONTACTO' else 
+             "WebButton" if col == 'WEB' else
+             "IniciativaComponent" if col == 'Nombre de la iniciativa' else None,
+             'maxWidth': 100 if col == 'PAIS' else 
+             150 if col == 'WEB' else None,
+             'minWidth': 350 if col == 'Nombre de la iniciativa' else None,
+             }
             for col in excluded_columns
         ],
-        dangerously_allow_code=True,
         rowData=data_frame[excluded_columns].to_dict('records'),
         className="ag-theme-balham",
-        columnSize="sizeToFit",
+        columnSize="responsiveSizeToFit",
         dashGridOptions={
             'pagination': True,
             'paginationAutoPageSize': True,
-        }
-
+        },
+        defaultColDef={
+            'resizable': True,
+        },
 
     )
 ], style={'padding': '20px'})
